@@ -1,2 +1,3 @@
-# www-site
-The landing page forr the LILA project.
+# WWW Site
+
+The landing page for the LILA project.
