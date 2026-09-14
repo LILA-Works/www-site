@@ -1,5 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+// Public by design: Web3Forms keys only allow sending to the inbox they were created for.
+const WEB3FORMS_ACCESS_KEY = 'a6c0b570-4de9-4838-9dfe-dd5dbc4fcec0';
 ---
 
 <Layout title="LILA — Lean Intelligent Local Agent">
@@ -11,7 +14,7 @@ import Layout from '../layouts/Layout.astro';
           <strong>L</strong>ean <strong>I</strong>ntelligent <strong>L</strong>ocal <strong>A</strong>gent
         </p>
         <p class="tagline">Private by design, explicit in every action, light enough for your laptop.</p>
-        <a class="button" href="#connect">Follow the build</a>
+        <a class="button" href="#connect">Get in touch</a>
       </div>
     </section>
 
@@ -163,23 +166,19 @@ import Layout from '../layouts/Layout.astro';
     </section>
 
     <section id="connect" class="connect">
-      <div class="container connect-grid">
-        <div class="card">
-          <h2>Follow the build</h2>
-          <p>LILA is in early development. Join the list for build updates and early access.</p>
-          <!-- TODO: point `action` at the mailing list provider's form endpoint. -->
-          <form action="#" method="post">
-            <label for="subscribe-email">Email</label>
-            <input id="subscribe-email" type="email" name="email" required autocomplete="email" />
-            <button class="button" type="submit">Join the list</button>
-          </form>
-        </div>
-
+      <div class="container">
         <div class="card">
           <h2>Get in touch</h2>
-          <p>Have a workflow that needs a private agent? Tell me about it.</p>
-          <!-- TODO: point `action` at a form endpoint (e.g. Formspree / Web3Forms). -->
-          <form action="#" method="post">
+          <p>
+            LILA is in early development. Have a workflow that needs a private agent, or want early
+            access? Tell me about it.
+          </p>
+          <form action="https://api.web3forms.com/submit" method="post">
+            <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+            <input type="hidden" name="subject" value="New message from the LILA site" />
+            <input type="hidden" name="from_name" value="LILA website" />
+            <!-- Honeypot: bots tick this, humans never see it. -->
+            <input type="checkbox" name="botcheck" class="honeypot" tabindex="-1" autocomplete="off" />
             <label for="contact-name">Name</label>
             <input id="contact-name" type="text" name="name" required autocomplete="name" />
             <label for="contact-email">Email</label>
@@ -388,21 +387,9 @@ import Layout from '../layouts/Layout.astro';
     color: var(--muted);
   }
 
-  /* Connect: stacked on mobile, side-by-side on wide screens. */
-  .connect-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    align-items: start;
-  }
-
-  @media (min-width: 768px) {
-    .connect-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
   .card {
+    max-width: 36rem;
+    margin-inline: auto;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -436,6 +423,10 @@ import Layout from '../layouts/Layout.astro';
 
   textarea {
     resize: vertical;
+  }
+
+  .honeypot {
+    display: none;
   }
 
   .button {
